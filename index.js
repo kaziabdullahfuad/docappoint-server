@@ -10,7 +10,7 @@ app.use(cors())
 const port = process.env.PORT || 8080;
 
 
-const uri = "mongodb+srv://docappoint:E54v5C053Pg5WvhU@cluster0.2nmczrj.mongodb.net/?appName=Cluster0";
+const uri = process.env.MONGODB_URI;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -20,6 +20,34 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   }
 });
+
+const logger = (req, res, next) => {
+  console.log(`${req.method} | ${req.url}`);
+  next();
+};
+
+const verifyToken = async (req, res, next) => {
+  const { authorization } = req.headers;
+  //   console.log(req.headers, 'from verify token');
+  const token = authorization?.split(' ')[1];
+    console.log(token);
+  next(); // ata na dile jabe na
+  // if (!token) {
+  //   return res.status(401).json({ message: 'Unauthorize' });
+  // }
+
+  // try {
+  //   const JWKS = createRemoteJWKSet(new URL('http://localhost:3000/api/auth/jwks'));
+  //   const { payload } = await jwtVerify(token, JWKS);
+  //   req.user = payload;
+
+  //   next();
+  // } catch (error) {
+  //   console.error('Token validation failed:', error);
+  //   return res.status(401).json({ message: 'Unauthorize' });
+  // }
+
+};
 
 async function run() {
   try {
@@ -38,7 +66,7 @@ async function run() {
         res.send(result);
     });
 
-    app.get("/doctors/:doctorId",async(req,res)=>{
+    app.get("/doctors/:doctorId",logger,verifyToken,async(req,res)=>{
     //    const doctorId=req.params.doctorId;
         const {doctorId}=req.params;
         // console.log(doctorId);
