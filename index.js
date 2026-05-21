@@ -60,6 +60,7 @@ async function run() {
 
     const db=client.db('docappointdb');
     const doctorCollection=db.collection("doctors");
+    const appointmentCollection=db.collection("appointments");
 
     app.get("/doctors",async(req,res)=>{
         const cursor=doctorCollection.find();
@@ -76,6 +77,15 @@ async function run() {
         const result=await doctorCollection.findOne(query);
         res.send(result);
     });
+
+    //appoint part shuru
+    app.post("/appointments",verifyToken,async(req,res)=>{
+        const appointmentData=req.body;
+         const result = await appointmentCollection.insertOne(appointmentData);
+
+        res.json(result);
+    })
+
 
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
