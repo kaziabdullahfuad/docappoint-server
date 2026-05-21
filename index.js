@@ -56,7 +56,7 @@ const verifyToken = async (req, res, next) => {
 async function run() {
   try {
    
-    await client.connect();
+    // await client.connect();
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
 
