@@ -110,6 +110,22 @@ async function run() {
         res.json(result);
     });
 
+    // appointment patch
+    app.patch("/appointments/:id", verifyToken, async (req, res) => {
+  const { id } = req.params;
+
+  const updatedData = req.body;
+
+        const result = await appointmentCollection.updateOne(
+          { _id: new ObjectId(id) },
+          {
+            $set: updatedData,
+          }
+        );
+
+        res.json(result);
+    });
+
 
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
