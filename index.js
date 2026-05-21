@@ -88,6 +88,28 @@ async function run() {
         res.json(result);
     })
 
+    // appointment getting
+    app.get("/appointments/:userId",verifyToken, async (req, res) => {
+        const { userId } = req.params;
+
+        const result = await appointmentCollection
+          .find({ userId: userId })
+          .toArray();
+
+        res.json(result);
+    });
+
+    // appointment delete
+    app.delete("/appointments/:id", verifyToken, async (req, res) => {
+        const { id } = req.params;
+
+        const result = await appointmentCollection.deleteOne({
+          _id: new ObjectId(id),
+        });
+
+        res.json(result);
+    });
+
 
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
